@@ -1,466 +1,586 @@
-<!DOCTYPE html>
-<html lang="en"><head>
-<meta http-equiv="content-type" content="text/html; charset=UTF-8">
-  <meta charset="UTF-8">
-  <title>Search - Sun System Handbook</title>
-  <script src="https://cdn.jsdelivr.net/npm/minisearch@7.2.0/dist/umd/index.min.js"></script>
-  <style>
-    body { 
-      margin: 0; 
-      padding: 0; 
-      background-color: #666699; 
-      font-family: Geneva, Arial, Helvetica, sans-serif; 
-    }
-    
-    .header-table { 
-      width: 100%; 
-      border-collapse: collapse; 
-      background-color: #000000; 
-    }
-    
-    .logo-cell { 
-      width: 1%; 
-      text-align: right; 
-      vertical-align: top; 
-      padding: 10px; 
-    }
-    
-    .title-cell { 
-      width: 99%; 
-      background-color: #000000; 
-      vertical-align: middle; 
-      padding: 10px 0; 
-    }
-    
-    .title-text { 
-      font-family: Geneva, Arial, Helvetica, sans-serif; 
-      color: #ffffff; 
-      font-size: 18px; 
-      font-weight: bold; 
-      margin-left: 20px; 
-    }
-    
-    .nav-cell { 
-      text-align: center; 
-      vertical-align: middle; 
-      padding: 10px 20px; 
-    }
-    
-    .nav-links a { 
-      color: #ffffff; 
-      text-decoration: none; 
-      font-size: 14px; 
-      margin: 0 5px; 
-    }
-    
-    .nav-links a:hover { 
-      color: #ff9900; 
-    }
-    
-    .separator { 
-      height: 2px; 
-      background-color: #000000; 
-      width: 100%; 
-    }
-    
-    .content-area { 
-      background-color: #666699; 
-      min-height: 100vh; 
-      padding: 20px 0; 
-    }
-    
-    .search-container { 
-      max-width: 800px; 
-      margin: 20px auto; 
-      padding: 30px; 
-      background-color: #ffffff; 
-      border-radius: 8px; 
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1); 
-    }
-    
-    .search-title { 
-      color: #666699; 
-      font-size: 28px; 
-      font-weight: bold; 
-      margin-bottom: 20px; 
-      text-align: center; 
-    }
-    
-    .search-box { 
-      width: 100%; 
-      padding: 15px; 
-      margin: 20px 0; 
-      font-size: 16px; 
-      border: 3px solid #666699; 
-      border-radius: 5px; 
-      box-sizing: border-box; 
-    }
-    
-    .search-box:focus { 
-      outline: none; 
-      border-color: #ff9900; 
-      box-shadow: 0 0 5px rgba(255, 153, 0, 0.3); 
-    }
-    
-    .result { 
-      margin-bottom: 20px; 
-      padding: 20px; 
-      border: 1px solid #ddd; 
-      background-color: #f9f9f9; 
-      border-radius: 5px; 
-      border-left: 4px solid #666699; 
-    }
-    
-    .result a { 
-      font-size: 18px; 
-      font-weight: bold; 
-      text-decoration: none; 
-      color: #666699; 
-    }
-    
-    .result a:hover { 
-      color: #ff9900; 
-    }
-    
-    .snippet { 
-      font-size: 14px; 
-      color: #555; 
-      margin-top: 10px; 
-      line-height: 1.4; 
-    }
-    
-    .no-results { 
-      text-align: center; 
-      color: #666; 
-      font-style: italic; 
-      margin: 40px 0; 
-      font-size: 16px; 
-    }
-    
-    .progress-container {
-      display: none;
-      margin: 10px 0 20px 0;
-    }
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <meta charset="UTF-8" />
+    <title>Search - Sun System Handbook</title>
+    <script src="https://cdn.jsdelivr.net/npm/minisearch@7.2.0/dist/umd/index.min.js"></script>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: #666699;
+        font-family: Geneva, Arial, Helvetica, sans-serif;
+      }
 
-    .progress {
-      width: 100%;
-      height: 10px;
-      background-color: #eee;
-      border-radius: 5px;
-      overflow: hidden;
-    }
+      .header-table {
+        width: 100%;
+        border-collapse: collapse;
+        background-color: #000000;
+      }
 
-    .progress-bar {
-      height: 100%;
-      width: 0%;
-      background-color: #666699;
-      transition: width 0.1s linear;
-    }
+      .logo-cell {
+        width: 1%;
+        text-align: right;
+        vertical-align: top;
+        padding: 10px;
+      }
 
-    /* Indeterminate animation */
-    .progress-bar.indeterminate {
-      width: 100%;
-      background: linear-gradient(90deg, #666699 25%, #8a86b8 50%, #666699 75%);
-      background-size: 200% 100%;
-      animation: progressIndeterminate 1s linear infinite;
-    }
+      .title-cell {
+        width: 99%;
+        background-color: #000000;
+        vertical-align: middle;
+        padding: 10px 0;
+      }
 
-    @keyframes progressIndeterminate {
-      0% { background-position: 200% 0; }
-      100% { background-position: -200% 0; }
-    }
+      .title-text {
+        font-family: Geneva, Arial, Helvetica, sans-serif;
+        color: #ffffff;
+        font-size: 18px;
+        font-weight: bold;
+        margin-left: 20px;
+      }
 
-    .progress-text {
-      font-size: 12px;
-      color: #666;
-      margin-top: 6px;
-      text-align: right;
-    }
-    
-    .search-footer { 
-      text-align: center; 
-      font-size: 12px; 
-      color: #666; 
-      margin-top: 30px; 
-      border-top: 1px solid #eee; 
-      padding-top: 15px; 
-    }
-    
-    .search-footer a { 
-      color: #666699; 
-      text-decoration: none; 
-    }
-    
-    .search-footer a:hover { 
-      color: #ff9900; 
-    }
-  </style>
-</head>
-<body>
-  <!-- Header with Logo and Title -->
-  <table class="header-table">
-    <tbody><tr>
-      <td class="nav-cell">
-        <div class="nav-links">
-          <a href="/index.html">Home</a> | 
-          <a href="/Systems/index.html">Current Systems</a> | 
-          <a href="/STK/STK_index.html">Former STK Products</a> |
-          <a href="/Systems/eolSystemList.html">EOL Systems</a> |
-          <a href="/Devices/index.html">Components</a> |
-          <a href="/General/index.html">General Info</a> | 
-          <a href="/Search.html">Search</a> | 
-          <a href="mailto:ssh-feedback@whitecastle.us.oracle.com">Feedback</a>
+      .nav-cell {
+        text-align: center;
+        vertical-align: middle;
+        padding: 10px 20px;
+      }
+
+      .nav-links a {
+        color: #ffffff;
+        text-decoration: none;
+        font-size: 14px;
+        margin: 0 5px;
+      }
+
+      .nav-links a:hover {
+        color: #ff9900;
+      }
+
+      .separator {
+        height: 2px;
+        background-color: #000000;
+        width: 100%;
+      }
+
+      .content-area {
+        background-color: #666699;
+        min-height: 100vh;
+        padding: 20px 0;
+      }
+
+      .search-container {
+        max-width: 800px;
+        margin: 20px auto;
+        padding: 30px;
+        background-color: #ffffff;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .search-title {
+        color: #666699;
+        font-size: 28px;
+        font-weight: bold;
+        margin-bottom: 20px;
+        text-align: center;
+      }
+
+      .search-box {
+        width: 100%;
+        padding: 15px;
+        margin: 20px 0;
+        font-size: 16px;
+        border: 3px solid #666699;
+        border-radius: 5px;
+        box-sizing: border-box;
+      }
+
+      .search-box:focus {
+        outline: none;
+        border-color: #ff9900;
+        box-shadow: 0 0 5px rgba(255, 153, 0, 0.3);
+      }
+
+      .result {
+        margin-bottom: 20px;
+        padding: 20px;
+        border: 1px solid #ddd;
+        background-color: #f9f9f9;
+        border-radius: 5px;
+        border-left: 4px solid #666699;
+      }
+
+      .result a {
+        font-size: 18px;
+        font-weight: bold;
+        text-decoration: none;
+        color: #666699;
+      }
+
+      .result a:hover {
+        color: #ff9900;
+      }
+
+      .snippet {
+        font-size: 14px;
+        color: #555;
+        margin-top: 10px;
+        line-height: 1.4;
+      }
+
+      .no-results {
+        text-align: center;
+        color: #666;
+        font-style: italic;
+        margin: 40px 0;
+        font-size: 16px;
+      }
+
+      .progress-container {
+        display: none;
+        margin: 10px 0 20px 0;
+      }
+
+      .progress {
+        width: 100%;
+        height: 10px;
+        background-color: #eee;
+        border-radius: 5px;
+        overflow: hidden;
+      }
+
+      .progress-bar {
+        height: 100%;
+        width: 0%;
+        background-color: #666699;
+        transition: width 0.1s linear;
+      }
+
+      /* Indeterminate animation */
+      .progress-bar.indeterminate {
+        width: 100%;
+        background: linear-gradient(
+          90deg,
+          #666699 25%,
+          #8a86b8 50%,
+          #666699 75%
+        );
+        background-size: 200% 100%;
+        animation: progressIndeterminate 1s linear infinite;
+      }
+
+      @keyframes progressIndeterminate {
+        0% {
+          background-position: 200% 0;
+        }
+        100% {
+          background-position: -200% 0;
+        }
+      }
+
+      .progress-text {
+        font-size: 12px;
+        color: #666;
+        margin-top: 6px;
+        text-align: right;
+      }
+
+      .search-footer {
+        text-align: center;
+        font-size: 12px;
+        color: #666;
+        margin-top: 30px;
+        border-top: 1px solid #eee;
+        padding-top: 15px;
+      }
+
+      .search-footer a {
+        color: #666699;
+        text-decoration: none;
+      }
+
+      .search-footer a:hover {
+        color: #ff9900;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Header with Logo and Title -->
+    <table class="header-table">
+      <tbody>
+        <tr>
+          <td class="nav-cell">
+            <div class="nav-links">
+              <a href="/index.html">Home</a> |
+              <a href="/Systems/index.html">Current Systems</a> |
+              <a href="/STK/STK_index.html">Former STK Products</a> |
+              <a href="/Systems/eolSystemList.html">EOL Systems</a> |
+              <a href="/Devices/index.html">Components</a> |
+              <a href="/General/index.html">General Info</a> |
+              <a href="/Search.html">Search</a> |
+              <a href="mailto:ssh-feedback@whitecastle.us.oracle.com"
+                >Feedback</a
+              >
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Separator Line -->
+    <div class="separator"></div>
+
+    <!-- Content Area -->
+    <div class="content-area">
+      <div class="search-container">
+        <h1 class="search-title">Search System Handbook</h1>
+        <input
+          type="text"
+          id="searchBox"
+          class="search-box"
+          placeholder="Type to search through all documentation..."
+        />
+        <div id="indexProgress" class="progress-container">
+          <div class="progress">
+            <div id="progressBar" class="progress-bar"></div>
+          </div>
+          <div id="progressText" class="progress-text">Building index...</div>
         </div>
-      </td>
-    </tr>
-  </tbody></table>
-  
-  <!-- Separator Line -->
-  <div class="separator"></div>
-  
-  <!-- Content Area -->
-  <div class="content-area">
-    <div class="search-container">
-      <h1 class="search-title">Search System Handbook</h1>
-      <input type="text" id="searchBox" class="search-box" placeholder="Type to search through all documentation...">
-      <div id="indexProgress" class="progress-container">
-        <div class="progress"><div id="progressBar" class="progress-bar"></div></div>
-        <div id="progressText" class="progress-text">Building index...</div>
-      </div>
-      <div id="results"></div>
-      
-      <div class="search-footer">
-        Search powered by <a href="https://lucaong.github.io/minisearch/" target="_blank">MiniSearch</a> | 
-        <a href="/genindex.py">Index Generation Script</a>
+        <div id="results"></div>
+
+        <div class="search-footer">
+          Search powered by
+          <a href="https://lucaong.github.io/minisearch/" target="_blank"
+            >MiniSearch</a
+          >
+          |
+          <a href="/genindex.py">Index Generation Script</a>
+        </div>
       </div>
     </div>
-  </div>
 
-  <script>
-    let idx, store;
-    let searchTimeout;
-    let isIndexReady = false;
-    let initialQueryGlobal = null;
+    <script>
+      let idx, store;
+      let searchTimeout;
+      let isIndexReady = false;
+      let initialQueryGlobal = null;
 
-    // Load index with download progress
-    (function loadIndex() {
-      const input = document.getElementById('searchBox');
-      input.disabled = true;
-      showProgress(true);
-      setProgressIndeterminate(true, 'Downloading index...');
+      // Load index with download progress
+      (function loadIndex() {
+        const input = document.getElementById("searchBox");
+        input.disabled = true;
+        showProgress(true);
+        setProgressIndeterminate(true, "Downloading index...");
 
-      fetch("./search-index.json")
-        .then(async res => {
-          if (!res.ok) throw new Error('Failed to fetch search-index.json');
-          const contentLengthHeader = res.headers.get('Content-Length');
-          const hasLength = contentLengthHeader && !isNaN(parseInt(contentLengthHeader, 10));
-          if (res.body && hasLength) {
-            const totalBytes = parseInt(contentLengthHeader, 10);
-            const reader = res.body.getReader();
-            let receivedBytes = 0;
-            const chunks = [];
+        fetch("./search-index.json")
+          .then(async (res) => {
+            if (!res.ok) throw new Error("Failed to fetch search-index.json");
+            const contentLengthHeader = res.headers.get("Content-Length");
+            const hasLength =
+              contentLengthHeader && !isNaN(parseInt(contentLengthHeader, 10));
+            if (res.body && hasLength) {
+              const totalBytes = parseInt(contentLengthHeader, 10);
+              const reader = res.body.getReader();
+              let receivedBytes = 0;
+              const chunks = [];
 
-            // Switch to determinate once we know total size
-            setProgressIndeterminate(false, 'Downloading index... 0%');
+              // Switch to determinate once we know total size
+              setProgressIndeterminate(false, "Downloading index... 0%");
 
-            while (true) {
-              const { done, value } = await reader.read();
-              if (done) break;
-              chunks.push(value);
-              receivedBytes += value.byteLength;
-              updateDownloadProgress(receivedBytes, totalBytes);
+              while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+                chunks.push(value);
+                receivedBytes += value.byteLength;
+                updateDownloadProgress(receivedBytes, totalBytes);
+              }
+
+              const merged = new Uint8Array(receivedBytes);
+              let position = 0;
+              for (const chunk of chunks) {
+                merged.set(chunk, position);
+                position += chunk.byteLength;
+              }
+              const text = new TextDecoder("utf-8").decode(merged);
+              return JSON.parse(text);
+            } else {
+              // Keep indeterminate animation if total size unknown
+              return res.json();
             }
+          })
+          .then((data) => {
+            store = data.reduce((acc, doc) => {
+              acc[doc.id] = doc;
+              return acc;
+            }, {});
 
-            const merged = new Uint8Array(receivedBytes);
-            let position = 0;
-            for (const chunk of chunks) {
-              merged.set(chunk, position);
-              position += chunk.byteLength;
-            }
-            const text = new TextDecoder('utf-8').decode(merged);
-            return JSON.parse(text);
-          } else {
-            // Keep indeterminate animation if total size unknown
-            return res.json();
-          }
-        })
-        .then(data => {
-          store = data.reduce((acc, doc) => {
-            acc[doc.id] = doc;
-            return acc;
-          }, {});
+            idx = new MiniSearch({
+              fields: ["title", "content"],
+              idField: "id",
+            });
 
-          idx = new MiniSearch({
-            fields: ["title", "content"],
-            idField: "id"
+            // Build index incrementally with progress bar
+            initialQueryGlobal = new URLSearchParams(
+              window.location.search,
+            ).get("q");
+            buildIndexIncrementally(data);
+          })
+          .catch((err) => {
+            showProgress(false);
+            console.log(
+              "Search index not found - search functionality disabled",
+            );
           });
+      })();
 
-          // Build index incrementally with progress bar
-          initialQueryGlobal = new URLSearchParams(window.location.search).get('q');
-          buildIndexIncrementally(data);
-        })
-        .catch(err => {
-          showProgress(false);
-          console.log("Search index not found - search functionality disabled");
-        });
-    })();
-
-    function updateURL(query) {
-      const url = new URL(window.location);
-      if (query && query.trim()) {
-        url.searchParams.set('q', query);
-      } else {
-        url.searchParams.delete('q');
-      }
-      
-      // Update URL without reloading the page
-      window.history.replaceState({}, '', url);
-    }
-
-    function performSearch(rawQuery) {
-      const resultsDiv = document.getElementById("results");
-      resultsDiv.innerHTML = "";
-
-      const query = (rawQuery || '').trim();
-
-      if (!isIndexReady || query.length < 3) {
-        updateURL('');
-        return;
-      }
-
-      updateURL(query);
-
-      try {
-        const results = idx.search(query, { prefix: true, fuzzy: 0.2 });
-        const limitedResults = results.slice(0, 100);
-
-        if (limitedResults.length === 0) {
-          resultsDiv.innerHTML = "<p class='no-results'>No results found</p>";
+      function updateURL(query) {
+        const url = new URL(window.location);
+        if (query && query.trim()) {
+          url.searchParams.set("q", query);
         } else {
-          limitedResults.forEach(r => {
-            const item = store[r.id];
-            const snippet = item.content.length > 160 ? 
-              item.content.substring(0, 160) + "..." : 
-              item.content;
-            resultsDiv.innerHTML += `
+          url.searchParams.delete("q");
+        }
+
+        // Update URL without reloading the page
+        window.history.replaceState({}, "", url);
+      }
+
+      function rankSearchResults(results, query) {
+        return results
+          .map((result) => {
+            const item = store[result.id];
+            const title = item.title;
+            let score = result.score; // Start with MiniSearch's relevance score
+
+            // Boost score based on title length (shorter titles rank higher)
+            const titleLength = title.length;
+            const lengthBoost = Math.max(0, 200 - titleLength) / 200; // Normalize to 0-1
+            score += lengthBoost * 10; // Add up to 10 points for short titles
+
+            // Category-based ranking boosts
+            const categoryBoosts = [
+              // Highest priority: Main category pages
+              { pattern: /^Systems\s*-/, boost: 100 },
+              { pattern: /^General\s*-/, boost: 95 },
+              { pattern: /^Devices\s*-/, boost: 90 },
+              { pattern: /^Components\s*-/, boost: 85 },
+
+              // High priority: Reference and core documentation
+              { pattern: /\s*-\s*Reference$/, boost: 80 },
+              { pattern: /\s*-\s*Hardware Specifications$/, boost: 75 },
+              { pattern: /\s*-\s*How To$/, boost: 70 },
+
+              // Medium-high priority: Troubleshooting and procedures
+              { pattern: /\s*-\s*Troubleshooting$/, boost: 65 },
+              { pattern: /\s*-\s*Repair Procedures$/, boost: 60 },
+              { pattern: /\s*-\s*Problem Documents$/, boost: 55 },
+              { pattern: /\s*-\s*Field Action Bulletins$/, boost: 50 },
+
+              // Medium priority: Alerts and specific procedures
+              { pattern: /\s*-\s*Alerts$/, boost: 45 },
+              { pattern: /\s*-\s*LEDs$/, boost: 40 },
+
+              // Lower priority: Specific how-to documents
+              { pattern: /^How to/, boost: 35 },
+              { pattern: /^How To/, boost: 35 },
+
+              // System boards and wiring
+              { pattern: /^System Boards\s*-/, boost: 30 },
+              { pattern: /^Wiring\s*-/, boost: 25 },
+
+              // Post-date variants (slightly lower than main entries)
+              { pattern: /\(post\s+\w+\s+\d{4}\)/, boost: -5 },
+            ];
+
+            // Apply category boosts
+            for (const categoryBoost of categoryBoosts) {
+              if (categoryBoost.pattern.test(title)) {
+                score += categoryBoost.boost;
+                break; // Only apply the first matching boost
+              }
+            }
+
+            // Exact match boost for query terms in title
+            const queryLower = query.toLowerCase();
+            const titleLower = title.toLowerCase();
+            if (titleLower.includes(queryLower)) {
+              score += 20;
+            }
+
+            // Boost for exact model matches (e.g., "V240" in title for "V240" search)
+            const modelPattern = /\b[A-Z]\d{3,4}\b/g;
+            const queryModels = (query.match(modelPattern) || []).map((m) =>
+              m.toLowerCase(),
+            );
+            const titleModels = (title.match(modelPattern) || []).map((m) =>
+              m.toLowerCase(),
+            );
+
+            for (const queryModel of queryModels) {
+              if (titleModels.includes(queryModel)) {
+                score += 15;
+              }
+            }
+
+            return {
+              ...result,
+              score: score,
+              originalScore: result.score,
+            };
+          })
+          .sort((a, b) => b.score - a.score);
+      }
+
+      function performSearch(rawQuery) {
+        const resultsDiv = document.getElementById("results");
+        resultsDiv.innerHTML = "";
+
+        const query = (rawQuery || "").trim();
+
+        if (!isIndexReady || query.length < 3) {
+          updateURL("");
+          return;
+        }
+
+        updateURL(query);
+
+        try {
+          const results = idx.search(query, { prefix: true, fuzzy: 0.2 });
+          const rankedResults = rankSearchResults(results, query);
+          const limitedResults = rankedResults.slice(0, 100);
+
+          if (limitedResults.length === 0) {
+            resultsDiv.innerHTML = "<p class='no-results'>No results found</p>";
+          } else {
+            limitedResults.forEach((r) => {
+              const item = store[r.id];
+              const snippet =
+                item.content.length > 160
+                  ? item.content.substring(0, 160) + "..."
+                  : item.content;
+              resultsDiv.innerHTML += `
               <div class="result">
                 <a href="${item.url}">${item.title}</a>
                 <div class="snippet">${snippet}[...]</div>
               </div>`;
-          });
+            });
+          }
+        } catch (err) {
+          resultsDiv.innerHTML =
+            "<p class='no-results'>Search error - please try a different query</p>";
         }
-      } catch (err) {
-        resultsDiv.innerHTML = "<p class='no-results'>Search error - please try a different query</p>";
       }
-    }
 
-    // Handle search with debouncing to avoid too many URL updates
-    document.getElementById("searchBox").addEventListener("input", function () {
-      const query = this.value;
-      
-      // Clear existing timeout
-      clearTimeout(searchTimeout);
-      
-      // Set new timeout for search and URL update
-      searchTimeout = setTimeout(() => {
-        performSearch(query);
-      }, 300); // 300ms delay to debounce rapid typing
-    });
+      // Handle search with debouncing to avoid too many URL updates
+      document
+        .getElementById("searchBox")
+        .addEventListener("input", function () {
+          const query = this.value;
 
-    // Handle browser back/forward navigation
-    window.addEventListener('popstate', function(event) {
-      const urlParams = new URLSearchParams(window.location.search);
-      const query = urlParams.get('q') || '';
-      document.getElementById('searchBox').value = query;
-      if (isIndexReady) {
-        performSearch(query);
-      }
-    });
+          // Clear existing timeout
+          clearTimeout(searchTimeout);
 
-    // Handle direct navigation with query parameter
-    window.addEventListener('load', function() {
-      const urlParams = new URLSearchParams(window.location.search);
-      const query = urlParams.get('q');
-      if (query) {
-        document.getElementById('searchBox').value = query;
+          // Set new timeout for search and URL update
+          searchTimeout = setTimeout(() => {
+            performSearch(query);
+          }, 300); // 300ms delay to debounce rapid typing
+        });
+
+      // Handle browser back/forward navigation
+      window.addEventListener("popstate", function (event) {
+        const urlParams = new URLSearchParams(window.location.search);
+        const query = urlParams.get("q") || "";
+        document.getElementById("searchBox").value = query;
         if (isIndexReady) {
           performSearch(query);
         }
-      }
-    });
+      });
 
-    function showProgress(show) {
-      const container = document.getElementById('indexProgress');
-      container.style.display = show ? 'block' : 'none';
-    }
-
-    function updateProgress(processed, total) {
-      const percent = total === 0 ? 0 : Math.round((processed / total) * 100);
-      const bar = document.getElementById('progressBar');
-      const text = document.getElementById('progressText');
-      bar.style.width = percent + '%';
-      text.textContent = `Building index... ${percent}% (${processed}/${total})`;
-    }
-
-    function setProgressIndeterminate(isIndeterminate, label) {
-      const bar = document.getElementById('progressBar');
-      const text = document.getElementById('progressText');
-      if (isIndeterminate) {
-        bar.classList.add('indeterminate');
-        bar.style.width = '100%';
-      } else {
-        bar.classList.remove('indeterminate');
-        bar.style.width = '0%';
-      }
-      if (label) {
-        text.textContent = label;
-      }
-    }
-
-    function updateDownloadProgress(received, total) {
-      const percent = total === 0 ? 0 : Math.round((received / total) * 100);
-      const bar = document.getElementById('progressBar');
-      const text = document.getElementById('progressText');
-      bar.style.width = percent + '%';
-      text.textContent = `Downloading index... ${percent}%`;
-    }
-
-    function buildIndexIncrementally(documents) {
-      const input = document.getElementById('searchBox');
-      input.disabled = true;
-      showProgress(true);
-      setProgressIndeterminate(false, 'Building index... 0%');
-
-      const total = documents.length;
-      let processed = 0;
-      const chunkSize = 300;
-
-      function processChunk() {
-        const end = Math.min(processed + chunkSize, total);
-        for (let i = processed; i < end; i++) {
-          idx.add(documents[i]);
-        }
-        processed = end;
-        updateProgress(processed, total);
-
-        if (processed < total) {
-          setTimeout(processChunk, 0);
-        } else {
-          isIndexReady = true;
-          input.disabled = false;
-          showProgress(false);
-          const urlParams = new URLSearchParams(window.location.search);
-          const initialQuery = urlParams.get('q') || initialQueryGlobal;
-          if (initialQuery) {
-            document.getElementById('searchBox').value = initialQuery;
-            performSearch(initialQuery);
+      // Handle direct navigation with query parameter
+      window.addEventListener("load", function () {
+        const urlParams = new URLSearchParams(window.location.search);
+        const query = urlParams.get("q");
+        if (query) {
+          document.getElementById("searchBox").value = query;
+          if (isIndexReady) {
+            performSearch(query);
           }
         }
+      });
+
+      function showProgress(show) {
+        const container = document.getElementById("indexProgress");
+        container.style.display = show ? "block" : "none";
       }
 
-      processChunk();
-    }
-  </script>
+      function updateProgress(processed, total) {
+        const percent = total === 0 ? 0 : Math.round((processed / total) * 100);
+        const bar = document.getElementById("progressBar");
+        const text = document.getElementById("progressText");
+        bar.style.width = percent + "%";
+        text.textContent = `Building index... ${percent}% (${processed}/${total})`;
+      }
 
+      function setProgressIndeterminate(isIndeterminate, label) {
+        const bar = document.getElementById("progressBar");
+        const text = document.getElementById("progressText");
+        if (isIndeterminate) {
+          bar.classList.add("indeterminate");
+          bar.style.width = "100%";
+        } else {
+          bar.classList.remove("indeterminate");
+          bar.style.width = "0%";
+        }
+        if (label) {
+          text.textContent = label;
+        }
+      }
 
-</body></html>
+      function updateDownloadProgress(received, total) {
+        const percent = total === 0 ? 0 : Math.round((received / total) * 100);
+        const bar = document.getElementById("progressBar");
+        const text = document.getElementById("progressText");
+        bar.style.width = percent + "%";
+        text.textContent = `Downloading index... ${percent}%`;
+      }
+
+      function buildIndexIncrementally(documents) {
+        const input = document.getElementById("searchBox");
+        input.disabled = true;
+        showProgress(true);
+        setProgressIndeterminate(false, "Building index... 0%");
+
+        const total = documents.length;
+        let processed = 0;
+        const chunkSize = 300;
+
+        function processChunk() {
+          const end = Math.min(processed + chunkSize, total);
+          for (let i = processed; i < end; i++) {
+            idx.add(documents[i]);
+          }
+          processed = end;
+          updateProgress(processed, total);
+
+          if (processed < total) {
+            setTimeout(processChunk, 0);
+          } else {
+            isIndexReady = true;
+            input.disabled = false;
+            showProgress(false);
+            const urlParams = new URLSearchParams(window.location.search);
+            const initialQuery = urlParams.get("q") || initialQueryGlobal;
+            if (initialQuery) {
+              document.getElementById("searchBox").value = initialQuery;
+              performSearch(initialQuery);
+            }
+          }
+        }
+
+        processChunk();
+      }
+    </script>
+  </body>
+</html>

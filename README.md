@@ -7,6 +7,7 @@ Client-side search + indexer for the Sun/Oracle System Handbook.
 ## Setup
 
 - Install beautifulsoup:
+
 ```bash
 # pick your poison of choice
 sudo apt install python3-bs4
@@ -19,6 +20,7 @@ pip3 install beautifulsoup4
 ```
 
 - Go to the root of the documentation & download the assets:
+
 ```bash
 SUN_DOC_PATH="/path/to/your/doc"
 cd ${SUN_DOC_PATH}
@@ -28,6 +30,7 @@ wget -O genindex.py https://raw.githubusercontent.com/kakwa/sun-doc-search/main/
 ```
 
 - Generate the index generator script (/!\ RAM intensive):
+
 ```bash
 python3 genindex.py
 ls -lh search-index.json
